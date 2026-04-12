@@ -1,0 +1,21 @@
+{
+  "validReport": {
+    "name": "Sales Report Q1",
+    "dimension": "Date",
+    "metric": "Revenue",
+    "dataSource": "Google Ads",
+    "filter": "Last 30 days"
+  },
+  "invalidReport": {
+    "name": "",
+    "dimension": "",
+    "metric": "",
+    "dataSource": "",
+    "filter": ""
+  },
+  "edgeCases": {
+    "longName": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "specialChars": "<script>alert('xss')</script>",
+    "duplicateName": "Sales Report Q1"
+  }
+}
