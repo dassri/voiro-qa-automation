@@ -2,112 +2,118 @@ import { test, expect } from '@playwright/test';
 import { CreateReportPage } from '../pages/CreateReportPage';
 import testData from '../test-data/reportData.json';
 
-test.describe('Create Report Feature', () => {
+test.describe('OrangeHRM - Login & Report Feature Tests', () => {
 
-  // ✅ TEST 1: Check form loads correctly
-  test('TC01 - Create Report form should load correctly', async ({ page }) => {
+  // ✅ TEST 1: Login page loads correctly
+  test('TC01 - Login page should load correctly', async ({ page }) => {
     const reportPage = new CreateReportPage(page);
     await reportPage.navigate();
-    await reportPage.clickCreateReport();
-    await expect(page).toHaveURL(/report-builder/);
+    await expect(page).toHaveURL(/login/);
+    await expect(page.locator('button[type="submit"]')).toBeVisible();
   });
 
-  // ✅ TEST 2: Create report with valid data
-  test('TC02 - Create report with valid data', async ({ page }) => {
+  // ✅ TEST 2: Login with valid credentials
+  test('TC02 - Login with valid credentials', async ({ page }) => {
     const reportPage = new CreateReportPage(page);
     await reportPage.navigate();
-    await reportPage.clickCreateReport();
-    await reportPage.fillReportName(testData.validReport.name);
-    await reportPage.selectDimension(testData.validReport.dimension);
-    await reportPage.selectMetric(testData.validReport.metric);
-    await reportPage.saveReport();
-    const msg = await reportPage.getSuccessMessage();
-    expect(msg).toBeTruthy();
+    await reportPage.login(
+      testData.validUser.username,
+      testData.validUser.password
+    );
+    const dashboard = await reportPage.isDashboardVisible();
+    expect(dashboard).toBeTruthy();
   });
 
-  // ✅ TEST 3: Missing required fields validation
-  test('TC03 - Show error for missing required fields', async ({ page }) => {
+  // ✅ TEST 3: Login with invalid credentials
+  test('TC03 - Login with invalid credentials shows error', async ({ page }) => {
     const reportPage = new CreateReportPage(page);
     await reportPage.navigate();
-    await reportPage.clickCreateReport();
-    await reportPage.saveReport();
+    await reportPage.login(
+      testData.invalidUser.username,
+      testData.invalidUser.password
+    );
     const error = await reportPage.getErrorMessage();
     expect(error).toBeTruthy();
   });
 
-  // ✅ TEST 4: Invalid data validation
-  test('TC04 - Show error for invalid data', async ({ page }) => {
+  // ✅ TEST 4: Login with empty fields
+  test('TC04 - Login with empty fields shows validation', async ({ page }) => {
     const reportPage = new CreateReportPage(page);
     await reportPage.navigate();
-    await reportPage.clickCreateReport();
-    await reportPage.fillReportName(testData.edgeCases.specialChars);
-    await reportPage.saveReport();
+    await reportPage.login(
+      testData.emptyUser.username,
+      testData.emptyUser.password
+    );
+    await expect(page.locator('.oxd-input-field-error-message').first()).toBeVisible();
+  });
+
+  // ✅ TEST 5: Navigate to Admin panel after login
+  test('TC05 - Navigate to Admin panel after login', async ({ page }) => {
+    const reportPage = new CreateReportPage(page);
+    await reportPage.navigate();
+    await reportPage.login(
+      testData.validUser.username,
+      testData.validUser.password
+    );
+    await reportPage.goToAdmin();
+    await expect(page).toHaveURL(/viewSystemUsers/);
+  });
+
+  // ✅ AI EDGE CASE 1: Very long username
+  test('TC06 - AI Edge Case: Very long username', async ({ page }) => {
+    const reportPage = new CreateReportPage(page);
+    await reportPage.navigate();
+    await reportPage.login(
+      testData.edgeCases.longUsername,
+      testData.validUser.password
+    );
     const error = await reportPage.getErrorMessage();
     expect(error).toBeTruthy();
   });
 
-  // ✅ TEST 5: Created report appears in list
-  test('TC05 - Created report appears in report list', async ({ page }) => {
+  // ✅ AI EDGE CASE 2: Special characters in username
+  test('TC07 - AI Edge Case: Special characters in username', async ({ page }) => {
     const reportPage = new CreateReportPage(page);
     await reportPage.navigate();
-    await reportPage.clickCreateReport();
-    await reportPage.fillReportName(testData.validReport.name);
-    await reportPage.saveReport();
-    await expect(page.locator('text=' + testData.validReport.name)).toBeVisible();
-  });
-
-  // ✅ AI EDGE CASE 1: Very long report name
-  test('TC06 - AI Edge Case: Very long report name', async ({ page }) => {
-    const reportPage = new CreateReportPage(page);
-    await reportPage.navigate();
-    await reportPage.clickCreateReport();
-    await reportPage.fillReportName(testData.edgeCases.longName);
-    await reportPage.saveReport();
+    await reportPage.login(
+      testData.edgeCases.specialChars,
+      testData.validUser.password
+    );
     const error = await reportPage.getErrorMessage();
     expect(error).toBeTruthy();
   });
 
-  // ✅ AI EDGE CASE 2: Special characters in name
-  test('TC07 - AI Edge Case: Special characters in report name', async ({ page }) => {
+  // ✅ AI EDGE CASE 3: SQL Injection attempt
+  test('TC08 - AI Edge Case: SQL Injection in username', async ({ page }) => {
     const reportPage = new CreateReportPage(page);
     await reportPage.navigate();
-    await reportPage.clickCreateReport();
-    await reportPage.fillReportName(testData.edgeCases.specialChars);
-    await reportPage.saveReport();
+    await reportPage.login(
+      testData.edgeCases.sqlInjection,
+      testData.validUser.password
+    );
     const error = await reportPage.getErrorMessage();
     expect(error).toBeTruthy();
   });
 
-  // ✅ AI EDGE CASE 3: Duplicate report name
-  test('TC08 - AI Edge Case: Duplicate report name', async ({ page }) => {
+  // ✅ AI EDGE CASE 4: Only spaces in username
+test('TC09 - AI Edge Case: Only spaces in username', async ({ page }) => {
     const reportPage = new CreateReportPage(page);
     await reportPage.navigate();
-    await reportPage.clickCreateReport();
-    await reportPage.fillReportName(testData.edgeCases.duplicateName);
-    await reportPage.saveReport();
-    const error = await reportPage.getErrorMessage();
-    expect(error).toBeTruthy();
+    await reportPage.login(
+      testData.edgeCases.onlySpaces,
+      testData.validUser.password
+    );
+    await expect(page.locator('.oxd-input-field-error-message, .oxd-alert-content-text').first()).toBeVisible();
   });
 
-  // ✅ AI EDGE CASE 4: Save without selecting dimension
-  test('TC09 - AI Edge Case: Missing dimension field', async ({ page }) => {
+  // ✅ AI EDGE CASE 5: Valid username wrong password
+  test('TC10 - AI Edge Case: Valid username wrong password', async ({ page }) => {
     const reportPage = new CreateReportPage(page);
     await reportPage.navigate();
-    await reportPage.clickCreateReport();
-    await reportPage.fillReportName(testData.validReport.name);
-    await reportPage.saveReport();
-    const error = await reportPage.getErrorMessage();
-    expect(error).toBeTruthy();
-  });
-
-  // ✅ AI EDGE CASE 5: Save without selecting metric
-  test('TC10 - AI Edge Case: Missing metric field', async ({ page }) => {
-    const reportPage = new CreateReportPage(page);
-    await reportPage.navigate();
-    await reportPage.clickCreateReport();
-    await reportPage.fillReportName(testData.validReport.name);
-    await reportPage.selectDimension(testData.validReport.dimension);
-    await reportPage.saveReport();
+    await reportPage.login(
+      testData.validUser.username,
+      testData.edgeCases.wrongPasswordOnly
+    );
     const error = await reportPage.getErrorMessage();
     expect(error).toBeTruthy();
   });

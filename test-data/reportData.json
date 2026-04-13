@@ -1,21 +1,21 @@
 {
-  "validReport": {
-    "name": "Sales Report Q1",
-    "dimension": "Date",
-    "metric": "Revenue",
-    "dataSource": "Google Ads",
-    "filter": "Last 30 days"
+  "validUser": {
+    "username": "Admin",
+    "password": "admin123"
   },
-  "invalidReport": {
-    "name": "",
-    "dimension": "",
-    "metric": "",
-    "dataSource": "",
-    "filter": ""
+  "invalidUser": {
+    "username": "wronguser",
+    "password": "wrongpassword"
+  },
+  "emptyUser": {
+    "username": "",
+    "password": ""
   },
   "edgeCases": {
-    "longName": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "longUsername": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
     "specialChars": "<script>alert('xss')</script>",
-    "duplicateName": "Sales Report Q1"
+    "sqlInjection": "' OR '1'='1",
+    "onlySpaces": "     ",
+    "wrongPasswordOnly": "Admin"
   }
 }

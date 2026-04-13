@@ -7,43 +7,47 @@ export class CreateReportPage {
     this.page = page;
   }
 
-  // Navigate to Report Builder
+  // Navigate to login page
   async navigate() {
-    await this.page.goto('/report-builder');
+    await this.page.goto('/web/index.php/auth/login');
   }
 
-  // Click Create Report button
-  async clickCreateReport() {
-    await this.page.click('[data-testid="create-report-btn"]');
+  // Login with credentials
+  async login(username: string, password: string) {
+    await this.page.fill('input[name="username"]', username);
+    await this.page.fill('input[type="password"]', password);
+    await this.page.click('button[type="submit"]');
   }
 
-  // Fill report name
-  async fillReportName(name: string) {
-    await this.page.fill('[data-testid="report-name"]', name);
+  // Check if dashboard is visible after login
+  async isDashboardVisible() {
+     try {
+      await this.page.waitForURL(/dashboard/, { timeout: 10000 });
+      return true;
+    } catch {
+      return false;
+    }
   }
 
-  // Select dimension
-  async selectDimension(dimension: string) {
-    await this.page.selectOption('[data-testid="dimension"]', dimension);
+  // Logout
+  async logout() {
+    await this.page.click('.oxd-userdropdown-tab');
+    await this.page.click('text=Logout');
   }
 
-  // Select metric
-  async selectMetric(metric: string) {
-    await this.page.selectOption('[data-testid="metric"]', metric);
-  }
-
-  // Click Save button
-  async saveReport() {
-    await this.page.click('[data-testid="save-btn"]');
-  }
-
-  // Get success message
-  async getSuccessMessage() {
-    return await this.page.textContent('[data-testid="success-msg"]');
-  }
-
-  // Get validation error message
+  // Get error message
   async getErrorMessage() {
-    return await this.page.textContent('[data-testid="error-msg"]');
+    return await this.page.textContent('.oxd-alert-content-text');
+  }
+
+  // Navigate to Admin page
+  async goToAdmin() {
+    await this.page.click('text=Admin');
+  }
+
+  // Search for a user
+  async searchUser(username: string) {
+    await this.page.fill('input[placeholder="Type for hints..."]', username);
+    await this.page.click('button[type="submit"]');
   }
 }
