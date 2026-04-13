@@ -2,15 +2,21 @@ name: Playwright Tests
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+<<<<<<< HEAD
       - uses: actions/checkout@v4 # updated v3 → v4
 
       - uses: actions/setup-node@v4 # updated v3 → v4
+=======
+      - uses: actions/checkout@v4   # updated v3 → v4
+
+      - uses: actions/setup-node@v4   # updated v3 → v4
+>>>>>>> 9ca11ccdbaf1c5892a75b8e4dfc3549eb3a84476
         with:
           node-version: "24"
 
