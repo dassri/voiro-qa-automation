@@ -143,6 +143,8 @@ test('TC12 - Create user with valid data', async ({ page }) => {
 
   const reportPage = new CreateReportPage(page);
 
+  const uniqueUsername = "TestUser" + Date.now();
+
   await reportPage.navigate();
 
   await reportPage.login(
@@ -150,23 +152,20 @@ test('TC12 - Create user with valid data', async ({ page }) => {
     testData.validUser.password
   );
 
-  // go to Admin page
+  // go to Admin
   await reportPage.goToAdmin();
 
-  // click Add button
+  // click Add
   await reportPage.clickAddUser();
 
-  // unique username
-  const uniqueUsername = 'TestUser_' + Date.now();
-
   // fill form
-  await reportPage.fillAddUserForm(uniqueUsername, 'Password123!');
+  await reportPage.fillAddUserForm(uniqueUsername, "Password123!");
 
-  // save
+  // save user
   await reportPage.saveUser();
 
-  // verify success message
-  await expect(page.locator('.oxd-toast')).toBeVisible({ timeout: 15000 });
+  // verify redirected to user list page
+  await expect(page).toHaveURL(/viewSystemUsers/);
 
 });
 
