@@ -117,5 +117,100 @@ test('TC09 - AI Edge Case: Only spaces in username', async ({ page }) => {
     const error = await reportPage.getErrorMessage();
     expect(error).toBeTruthy();
   });
+  // ✅ TEST 11: Add User form loads correctly
+test('TC11 - Add User form loads correctly', async ({ page }) => {
 
+  const reportPage = new CreateReportPage(page);
+
+  await reportPage.navigate();
+
+  await reportPage.login(
+    testData.validUser.username,
+    testData.validUser.password
+  );
+
+  await reportPage.goToAdmin();
+
+  await reportPage.clickAddUser();
+
+  await expect(page).toHaveURL(/saveSystemUser/);
+
+});
+
+
+// ✅ TEST 12: Create user with valid data
+test('TC12 - Create user with valid data', async ({ page }) => {
+
+  const reportPage = new CreateReportPage(page);
+
+  await reportPage.navigate();
+
+  await reportPage.login(
+    testData.validUser.username,
+    testData.validUser.password
+  );
+
+  // go to Admin page
+  await reportPage.goToAdmin();
+
+  // click Add button
+  await reportPage.clickAddUser();
+
+  // unique username
+  const uniqueUsername = 'TestUser_' + Date.now();
+
+  // fill form
+  await reportPage.fillAddUserForm(uniqueUsername, 'Password123!');
+
+  // save
+  await reportPage.saveUser();
+
+  // verify success message
+  await expect(page.locator('.oxd-toast')).toBeVisible({ timeout: 15000 });
+
+});
+
+
+// ✅ TEST 13: Validation message when required fields are empty
+test('TC13 - Validation message when required fields are empty', async ({ page }) => {
+
+  const reportPage = new CreateReportPage(page);
+
+  await reportPage.navigate();
+
+  await reportPage.login(
+    testData.validUser.username,
+    testData.validUser.password
+  );
+
+  await reportPage.goToAdmin();
+
+  await reportPage.clickAddUser();
+
+  await reportPage.saveUser();
+
+  await expect(page.locator('.oxd-input-field-error-message').first()).toBeVisible();
+
+});
+
+
+// ✅ TEST 14: Verify created user appears in user list
+test('TC14 - Verify created user appears in user list', async ({ page }) => {
+
+  const reportPage = new CreateReportPage(page);
+
+  await reportPage.navigate();
+
+  await reportPage.login(
+    testData.validUser.username,
+    testData.validUser.password
+  );
+
+  await reportPage.goToAdmin();
+
+  await reportPage.searchUser("TestUser123");
+
+  await expect(page.locator('.oxd-table-body')).toContainText("TestUser123");
+
+});
 });

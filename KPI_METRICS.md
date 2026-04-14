@@ -8,9 +8,18 @@
 
 **Current Baseline:**
 
-- Total test scenarios identified: 10
-- Automated test scenarios: 10
+- Total test scenarios identified: 14
+- Automated test scenarios: 14
 - **Coverage: 100%**
+
+  Coverage includes:
+
+  Login functionality
+  Validation checks
+  Admin navigation
+  User creation flow
+  Search functionality
+  AI edge cases
 
 ---
 
@@ -20,9 +29,17 @@
 
 **Current Baseline:**
 
-- Number of tests: 10
-- Average time per test: ~3 seconds
-- **Estimated total execution time: ~30 seconds**
+- Number of tests: 14
+- Average time per test: ~6–10 seconds
+- **Estimated total execution time: ~2–3 minutes**
+
+  Execution time includes:
+
+  Browser launch
+  Login steps
+  Form validation checks
+  User creation workflow
+  Search verification
 
 ---
 
@@ -33,10 +50,18 @@ during development.
 
 **Current Baseline:**
 
-- Defects caught during assignment development: 3
-  1. Missing validation on empty report name
-  2. Special characters not handled properly
-  3. Duplicate report name not flagged
+- Defects caught during assignment development: 5
+  1.Incorrect locator for Username search field
+  2.Duplicate username causing test failure
+  3.Employee Name autocomplete validation issue
+  4.Toast message locator timing issue
+  5.Incorrect selector for validation messages
+
+  These defects improved:
+  Locator stability
+  Test reliability
+  Data uniqueness strategy
+  Validation coverage
 
 ---
 
@@ -63,3 +88,13 @@ To track these KPIs in a real release cycle I would use:
 After every CI/CD run, test results are automatically
 parsed and pushed to the dashboard so the entire team
 has real time visibility into test health.
+
+### Final KPI Summary:
+
+| KPI                 | Value        |
+| ------------------- | ------------ |
+| Automation Coverage | 100%         |
+| Total Tests         | 14           |
+| Execution Time      | ~2–3 minutes |
+| Defects Identified  | 5            |
+| CI/CD Integration   | Implemented  |

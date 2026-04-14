@@ -18,10 +18,16 @@ export class CreateReportPage {
     await this.page.fill('input[type="password"]', password);
     await this.page.click('button[type="submit"]');
   }
+  // Navigate to Admin page
+  async goToAdmin() {
 
-  // Check if dashboard is visible after login
+  await this.page.getByRole('link', { name: 'Admin' }).click();
+
+}
+
+  // Check dashboard visible
   async isDashboardVisible() {
-     try {
+    try {
       await this.page.waitForURL(/dashboard/, { timeout: 10000 });
       return true;
     } catch {
@@ -35,19 +41,63 @@ export class CreateReportPage {
     await this.page.click('text=Logout');
   }
 
-  // Get error message
+  // error message
   async getErrorMessage() {
     return await this.page.textContent('.oxd-alert-content-text');
   }
 
-  // Navigate to Admin page
-  async goToAdmin() {
-    await this.page.click('text=Admin');
+  // search user
+async searchUser(username: string) {
+
+  // username search field (top filter)
+  await this.page.locator('input').nth(1).fill(username);
+
+  // click search button
+  await this.page.getByRole('button', { name: 'Search' }).click();
+
+}
+
+  
+
+  // click Add button
+  async clickAddUser() {
+    await this.page.click('button:has-text("Add")');
   }
 
-  // Search for a user
-  async searchUser(username: string) {
-    await this.page.fill('input[placeholder="Type for hints..."]', username);
-    await this.page.click('button[type="submit"]');
+  // fill Add User form
+ async fillAddUserForm(username: string, password: string) {
+
+  // User Role
+  await this.page.locator('.oxd-select-text').first().click();
+  await this.page.locator('.oxd-select-dropdown div').nth(1).click();
+
+  // Employee Name
+  await this.page.locator('input[placeholder="Type for hints..."]').fill('P');
+  await this.page.waitForTimeout(2000);
+  await this.page.keyboard.press('ArrowDown');
+  await this.page.keyboard.press('Enter');
+
+  // Status
+  await this.page.locator('.oxd-select-text').nth(1).click();
+  await this.page.locator('.oxd-select-dropdown div').nth(1).click();
+
+  // Username
+  await this.page.locator('input').nth(2).fill(username);
+  // Password
+  await this.page.locator('input[type="password"]').nth(0).fill(password);
+
+  // Confirm Password
+  await this.page.locator('input[type="password"]').nth(1).fill(password);
+
+}
+
+  // click Save
+  async saveUser() {
+    await this.page.click('button:has-text("Save")');
+  }
+
+  // success toast visible
+  async successToastVisible() {
+    return await this.page.locator('.oxd-toast').isVisible();
   }
 }

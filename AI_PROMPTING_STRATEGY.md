@@ -6,8 +6,16 @@ Claude AI (Anthropic) and ChatGPT
 
 ## Strategy Overview
 
-AI tools were used to generate initial test cases, identify edge cases,
-and assist in building the overall test plan for the Create Report feature.
+AI tools were used to generate initial test cases, identify edge cases, and assist in building the overall automation strategy for the OrangeHRM User Management and Login feature.
+
+AI helped with:
+
+Test case generation
+Edge case identification
+Page Object Model structure
+Locator strategy suggestions
+CI/CD workflow setup
+Improving test reliability
 
 ---
 
@@ -16,65 +24,110 @@ and assist in building the overall test plan for the Create Report feature.
 ### Prompt 1 — Generate Test Cases
 
 **Prompt:**
-"Given a Create Report form with fields: report name, dimensions, metrics,
-data sources and filters — generate test cases covering happy path,
-negative tests and validation scenarios"
+"Given a Login feature and User Management module (Add User) in an HRM application — generate test cases covering happy path, negative scenarios, and validation checks."
 
 **Output:**
-AI generated 8 test cases covering form load, valid data submission,
-missing fields, and invalid inputs.
+AI generated test cases covering:
+
+Login page validation
+Valid login scenario
+Invalid login credentials
+Empty field validation
+Navigation to Admin module
+User creation workflow
 
 **Edits Made:**
-Added Playwright-specific implementation details and POM structure.
+Converted AI-generated test cases into Playwright test scripts using:
+
+TypeScript
+Page Object Model (POM)
+JSON-based test data
 
 ---
 
 ### Prompt 2 — Generate Edge Cases
 
 **Prompt:**
-"Given a Create Report form with fields: report name, dimensions, metrics,
-data sources, filters — generate 5 edge case test scenarios beyond
-happy path and basic validation"
+"For a login form and user creation form, generate edge case test scenarios beyond happy path and basic validation."
 
 **Output:**
 AI suggested the following edge cases:
 
-1. Very long report name exceeding character limit
-2. Special characters and script injection in report name
-3. Duplicate report name submission
-4. Saving without selecting dimension
-5. Saving without selecting metric
+Very long username exceeding character limit
+Special characters in username field
+SQL injection attempt in login form
+Username with only spaces
+Valid username with incorrect password
+Duplicate username validation scenario
 
 **Edits Made:**
-Mapped each edge case to actual test data in reportData.json
-and implemented in createReport.spec.ts
+Mapped each edge case to actual test data in:
+test-data/reportData.json
+
+Implemented edge case scenarios in:
+tests/createReport.spec.ts
+
+Added dynamic username generation logic to avoid duplicate user failures.
 
 ---
 
-### Prompt 3 — Release Summary Reporting
+### Prompt 3 — Test Data Strategy using AI
 
 **Prompt:**
-"How would you use AI to automate release summary reporting
-for a QA test suite?"
+"Generate structured test data for login and user creation scenarios in JSON format."
 
 **Output:**
-AI suggested using LLM APIs to:
+AI suggested structured JSON format for:
 
-- Parse test result XML/HTML reports
-- Summarize pass/fail trends
-- Generate natural language release notes
-- Send automated Slack/email notifications
+valid credentials
+invalid credentials
+empty fields
+edge case inputs
 
-**How I would implement this:**
-After each CI/CD run, pipe the Playwright HTML report into an
-AI API call that generates a plain English summary like:
-"10 tests ran. 8 passed. 2 failed in edge case scenarios.
-No critical path failures detected."
+**Implementation:**
+Created reusable test data file:
+test-data/reportData.json
+
+**Benefits:**
+Easy maintenance
+Reusable test inputs
+Separation of test logic and data
+
+### Prompt 4 — AI-assisted CI/CD Strategy
+
+**Prompt:**
+
+"How can AI help improve CI/CD test reporting?"
+
+**Output:**
+
+AI suggested using language models to:
+
+Summarize Playwright HTML reports
+Highlight failed tests automatically
+Generate release summary text
+Identify flaky test patterns
+
+**Example future implementation:**
+
+After CI execution:
+"14 tests executed. 11 passed. 3 failed due to locator improvements needed. Core login flow working as expected."
 
 ---
 
 ## Summary
 
-AI tooling saved approximately 60% of initial test planning time.
-All AI outputs were reviewed, edited and validated manually before
-being added to the test suite.
+AI tooling helped accelerate:
+
+Test case design
+Edge case identification
+Test data structuring
+Framework architecture decisions
+
+Approximately 50–60% of initial planning effort was optimized using AI assistance.
+
+All AI-generated outputs were:
+
+reviewed manually
+validated against live application behaviour
+adjusted to ensure reliability
