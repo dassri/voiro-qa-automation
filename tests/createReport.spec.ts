@@ -199,6 +199,8 @@ test('TC14 - Verify created user appears in user list', async ({ page }) => {
 
   const reportPage = new CreateReportPage(page);
 
+  const uniqueUsername = "TestUser" + Date.now();
+
   await reportPage.navigate();
 
   await reportPage.login(
@@ -206,11 +208,26 @@ test('TC14 - Verify created user appears in user list', async ({ page }) => {
     testData.validUser.password
   );
 
+  // go to Admin
   await reportPage.goToAdmin();
 
-  await reportPage.searchUser("TestUser123");
+  // click Add
+  await reportPage.clickAddUser();
 
-  await expect(page.locator('.oxd-table-body')).toContainText("TestUser123");
+  // fill form
+  await reportPage.fillAddUserForm(uniqueUsername, "Password123!");
+
+  // save user
+  await reportPage.saveUser();
+
+  // wait for save to complete
+  await page.waitForTimeout(3000);
+
+  // search user
+  await reportPage.searchUser(uniqueUsername);
+
+  // verify user appears
+  await expect(page.locator('.oxd-table-body')).toContainText(uniqueUsername);
 
 });
 });
